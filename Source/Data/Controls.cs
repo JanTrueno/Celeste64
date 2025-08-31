@@ -1,26 +1,39 @@
 
 namespace Celeste64;
 
-public class Controls(Input input, ControlsConfig config, int controllerIndex)
+public class Controls : VirtualDevice
 {
-	public readonly Input Input = input;
-	public readonly int ControllerIndex = controllerIndex;
+	public readonly VirtualStick Move;
+	public readonly VirtualStick Camera;
+	public readonly VirtualAction Jump;
+	public readonly VirtualAction Dash;
+	public readonly VirtualAction Climb;
+	public readonly VirtualAction Pause;
+	public readonly VirtualAction Confirm;
+	public readonly VirtualAction Cancel;
+	public readonly (VirtualAction Left, VirtualAction Right, VirtualAction Up, VirtualAction Down) Menu;
 
-	public readonly VirtualStick Move = new(input, "Move", config.Move, controllerIndex);
-	public readonly VirtualStick Camera = new(input, "Camera", config.Camera, controllerIndex);
-	public readonly VirtualAction Jump = new(input, "Jump", config.Jump, controllerIndex);
-	public readonly VirtualAction Dash = new(input, "Dash", config.Dash, controllerIndex);
-	public readonly VirtualAction Climb = new(input, "Climb", config.Climb, controllerIndex);
-	public readonly VirtualAction Pause = new(input, "Pause", config.Pause, controllerIndex);
-	public readonly VirtualAction Confirm = new(input, "Confirm", config.Confirm, controllerIndex);
-	public readonly VirtualAction Cancel = new(input, "Cancel", config.Cancel, controllerIndex);
+	private readonly Dictionary<string, Dictionary<string, string>> prompts = [];
 
-	public readonly (VirtualAction Left, VirtualAction Right, VirtualAction Up, VirtualAction Down) Menu = (
-		new(input, "MenuLeft", config.MenuLeft, controllerIndex),
-		new(input, "MenuRight", config.MenuRight, controllerIndex),
-		new(input, "MenuUp", config.MenuUp, controllerIndex),
-		new(input, "MenuDown", config.MenuDown, controllerIndex)
-	);
+	public Controls(Input input, ControlsConfig config) : base(input, "Controls")
+	{
+		IndexMode = IndexModes.AutomaticLatest;
+
+		Move = AddStick("Move", config.Move);
+		Camera = AddStick("Camera", config.Camera);
+		Jump = AddAction("Jump", config.Jump);
+		Dash = AddAction("Dash", config.Dash);
+		Climb = AddAction("Climb", config.Climb);
+		Pause = AddAction("Pause", config.Pause);
+		Confirm = AddAction("Confirm", config.Confirm);
+		Cancel = AddAction("Cancel", config.Cancel);
+		Menu = (
+			AddAction("MenuLeft", config.MenuLeft),
+			AddAction("MenuRight", config.MenuRight),
+			AddAction("MenuUp", config.MenuUp),
+			AddAction("MenuDown", config.MenuDown)
+		);
+	}
 
 	public void Consume()
 	{
@@ -32,9 +45,7 @@ public class Controls(Input input, ControlsConfig config, int controllerIndex)
 		Pause.ConsumePress();
 	}
 
-	private readonly Dictionary<string, Dictionary<string, string>> prompts = [];
-
-	private string GetControllerName(GamepadProviders pad) => pad switch
+	private static string GetControllerName(GamepadProviders pad) => pad switch
 	{
 		GamepadProviders.PlayStation => "PlayStation 5",
 		GamepadProviders.Nintendo => "Nintendo Switch",
@@ -44,9 +55,9 @@ public class Controls(Input input, ControlsConfig config, int controllerIndex)
 
 	private string GetPromptLocation(string name)
 	{
-		var gamepad = Input.Controllers[ControllerIndex];
-		var deviceTypeName = 
-			gamepad.Connected ? GetControllerName(gamepad.GamepadProvider) : "PC";
+		var deviceTypeName = IsGamepadLatest
+			? GetControllerName(Input.Controllers[ControllerIndex].GamepadProvider)
+			: "PC";
 
 		if (!prompts.TryGetValue(deviceTypeName, out var list))
 			prompts[deviceTypeName] = list = [];

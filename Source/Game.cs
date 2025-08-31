@@ -70,7 +70,7 @@ public class Game : App
 		batcher = new(GraphicsDevice);
 
 		GraphicsDevice.VSync = true;
-		Controls = new(Input, new ControlsConfig(), 0);
+		Controls = new(Input, new ControlsConfig());
 
 		// If this isn't stored, the delegate will get GC'd and everything will crash :)
 		audioEventCallback = MusicTimelineCallback;

@@ -61,7 +61,7 @@ public class Startup : Scene
 			}
 			else
 			{
-				Game.Controls = new(Input, controlConfig, 0);
+				Game.Controls = new(Input, controlConfig);
 			}
 		}
 

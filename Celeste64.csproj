@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
@@ -14,8 +14,8 @@
 
   <ItemGroup>
     <ProjectReference Include="../Foster/Framework/Foster.Framework.csproj" />
-    <PackageReference Include="SharpGLTF.Runtime" Version="1.0.0-alpha0031" />
-    <PackageReference Include="Sledge.Formats.Map" Version="1.1.5" />
+    <PackageReference Include="SharpGLTF.Runtime" Version="1.0.5" />
+    <PackageReference Include="Sledge.Formats.Map" Version="1.2.8" />
   </ItemGroup>
 
   <PropertyGroup Condition="($(RuntimeIdentifier) == '' and $([MSBuild]::IsOSPlatform('Linux'))) or $(RuntimeIdentifier.StartsWith('linux'))">
