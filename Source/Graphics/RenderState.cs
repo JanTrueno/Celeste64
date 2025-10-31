@@ -19,7 +19,7 @@ public struct RenderState(GraphicsDevice gfx, in Time time)
 
 	public void ApplyToMaterial(DefaultMaterial mat, in Matrix localTransformation)
 	{
-		if (mat.Shader == null)
+		if (mat.Vertex.Shader == null || mat.Fragment.Shader == null)
 			return;
 
 		var vertex = mat.VertexUniforms;

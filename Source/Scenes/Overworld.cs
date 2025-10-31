@@ -136,7 +136,7 @@ public class Overworld : Scene
 	private readonly List<Entry> entries = [];
 	private readonly Batcher batch;
 	private readonly Mesh<SpriteVertex> mesh;
-	private readonly Material material = new(Assets.Shaders["Sprite"]);
+	private readonly Material material = new(Assets.Materials["Sprite"]);
 	private readonly Menu restartConfirmMenu;
 
 	public Overworld(bool startOnLastSelected)

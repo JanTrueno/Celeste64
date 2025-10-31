@@ -43,7 +43,7 @@ public class DefaultMaterial : Material
     }
 
     public DefaultMaterial(Texture? texture = null)
-		: base(Assets.Shaders["Default"])
+		: base(Assets.Materials["Default"])
 	{
         Texture = texture;
         FragmentUniforms = new()
@@ -53,7 +53,7 @@ public class DefaultMaterial : Material
         };
     }
 
-    public virtual DefaultMaterial Clone()
+    public new virtual DefaultMaterial Clone()
 	{
 		var copy = new DefaultMaterial(Texture);
 		CopyTo(copy);

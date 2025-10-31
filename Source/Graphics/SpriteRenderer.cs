@@ -9,7 +9,7 @@ public class SpriteRenderer
 	private readonly List<int> spriteIndices = [];
 	private readonly List<SpriteBatch> spriteBatches = [];
 	private readonly Mesh<SpriteVertex> spriteMesh = new(Game.Instance.GraphicsDevice);
-	private readonly Material spriteMaterial = new(Assets.Shaders["Sprite"]);
+	private readonly Material spriteMaterial = new(Assets.Materials["Sprite"]);
 
 	public void Render(ref RenderState state, List<Sprite> sprites, bool postEffects)
 	{

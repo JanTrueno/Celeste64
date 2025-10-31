@@ -847,7 +847,7 @@ public class World : Scene
 			postTarget.Clear(Color.Black);
 
 			// apply post fx
-			postMaterial.Shader = Assets.Shaders["Edge"];
+			postMaterial.CopyFrom(Assets.Materials["Edge"]);
 			postMaterial.Fragment.Samplers[1] = new(target.Attachments[1], new(TextureFilter.Nearest, TextureWrap.Clamp, TextureWrap.Clamp));
 			postMaterial.Fragment.SetUniformBuffer(new UniformBuffers.EdgeFragment()
 			{

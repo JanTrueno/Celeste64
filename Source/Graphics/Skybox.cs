@@ -7,7 +7,7 @@ public class Skybox
 	public readonly GraphicsDevice GraphicsDevice;
 	public readonly Texture Texture;
 	private readonly Mesh<SpriteVertex> mesh;
-	private readonly Material material = new(Assets.Shaders["Sprite"]);
+	private readonly Material material = new(Assets.Materials["Sprite"]);
 
 	public Skybox(Texture texture)
 	{

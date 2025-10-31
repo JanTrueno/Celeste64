@@ -33,7 +33,7 @@ public static partial class Assets
 	}
 
 	public static readonly Dictionary<string, Map> Maps = new(StringComparer.OrdinalIgnoreCase);
-	public static readonly Dictionary<string, Shader> Shaders = new(StringComparer.OrdinalIgnoreCase);
+	public static readonly Dictionary<string, Material> Materials = new(StringComparer.OrdinalIgnoreCase);
 	public static readonly Dictionary<string, Texture> Textures = new(StringComparer.OrdinalIgnoreCase);
 	public static readonly Dictionary<string, SkinnedTemplate> Models = new(StringComparer.OrdinalIgnoreCase);
 	public static readonly Dictionary<string, Subtexture> Subtextures = new(StringComparer.OrdinalIgnoreCase);
@@ -47,7 +47,7 @@ public static partial class Assets
 
 		Levels.Clear();
 		Maps.Clear();
-		Shaders.Clear();
+		Materials.Clear();
 		Textures.Clear();
 		Subtextures.Clear();
 		Models.Clear();
@@ -144,8 +144,8 @@ public static partial class Assets
 		foreach (var file in Directory.EnumerateFiles(shadersPath, "*.hlsl"))
 		{
 			var name = GetResourceName(shadersPath, file);
-			if (LoadShader(gfx, name) is Shader shader)
-				Shaders[shader.Name] = shader;
+			if (LoadShader(gfx, name) is Material material)
+				Materials[name] = material;
 		}
 
 		// load font files
@@ -223,7 +223,7 @@ public static partial class Assets
 		[JsonInclude] public int uniform_buffers;
 	}
 
-	private static Shader? LoadShader(GraphicsDevice gfx, string name)
+	private static Material? LoadShader(GraphicsDevice gfx, string name)
 	{
 		static ShaderReflection GetReflection(string file)
 		{
@@ -235,22 +235,28 @@ public static partial class Assets
 		var vMeta = GetReflection(path + ".vertex.json");
 		var fMeta = GetReflection(path + ".fragment.json");
 		var ext = gfx.Driver.GetShaderExtension();
-		var info = new ShaderCreateInfo(
-			Vertex: new(
+		var vertexShader = new Shader(gfx,
+			new(
+				Stage: ShaderStage.Vertex,
 				Code: File.ReadAllBytes(path + ".vertex." + ext),
 				SamplerCount: vMeta.samplers,
 				UniformBufferCount: vMeta.uniform_buffers,
 				EntryPoint: "vertex_main"
 			),
-			Fragment: new(
+			$"{name}.Vertex"
+		);
+		var fragmentShader = new Shader(gfx,
+			new(
+				Stage: ShaderStage.Fragment,
 				Code: File.ReadAllBytes(path + ".fragment." + ext),
 				SamplerCount: fMeta.samplers,
 				UniformBufferCount: fMeta.uniform_buffers,
 				EntryPoint: "fragment_main"
-			)
+			),
+			$"{name}.Vertex"
 		);
 
-		return new Shader(gfx, info, name);
+		return new Material(vertexShader, fragmentShader);
 	}
 }
 
