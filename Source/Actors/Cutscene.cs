@@ -225,7 +225,7 @@ public class Cutscene : Actor, IHaveUI
 			// try to find taling face
 			if (!string.IsNullOrEmpty(saying.Face))
 			{
-				var oddFrame = Time.BetweenInterval(timer, 0.3f, 0);
+				var oddFrame = Calc.BetweenInterval(timer, 0.3f, 0);
 				var src = saying.Face;
 				if (saying.Talking && Assets.Textures.ContainsKey($"{src}Talk00"))
 				{

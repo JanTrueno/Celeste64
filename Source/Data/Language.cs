@@ -81,8 +81,10 @@ public class Language
 			Dialog[k] = v;
 	}
 
+	[JsonIgnore]
 	public SpriteFont SpriteFont => spriteFont ?? throw new Exception("Call Language.Use() before using its SpriteFont");
 
+	[JsonIgnore]
 	public static Language Current
 	{
 		get
