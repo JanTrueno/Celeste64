@@ -4,7 +4,7 @@ This is the source code and general information for *Celeste 64: Fragments of th
 You can find prebuilt version of the game on [itch.io](https://maddymakesgamesinc.itch.io/celeste64).
 
 ### Installation
- - You need [.NET 9.0](https://dotnet.microsoft.com/en-us/download/dotnet/9.0)
+ - You need [.NET 10.0](https://dotnet.microsoft.com/en-us/download/dotnet/10.0)
  - Clone this repo, make sure NuGet packages are found with `dotnet restore`
  - Run `Celeste64.csproj` with `dotnet run` or `dotnet build`
 
@@ -39,3 +39,4 @@ You can find prebuilt version of the game on [itch.io](https://maddymakesgamesin
  - The `Source` folder, with exceptions where noted, is [licensed under MIT](Source/License.txt).
  - The `Source/Audio/FMOD` folder contains bindings and binaries from FMOD.
  - We're fine with non-commercial Mods / Levels / Fan Games using assets from the `Content` folder as long as it's clear it is not made by the Celeste team or endorsed by us.
+
