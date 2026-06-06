@@ -21,8 +21,8 @@ public class Controls : VirtualDevice
 
 		Move = AddStick("Move", config.Move);
 		Camera = AddStick("Camera", config.Camera);
-		Jump = AddAction("Jump", config.Jump);
-		Dash = AddAction("Dash", config.Dash);
+		Jump = AddAction("Jump", config.Jump, .1f);
+		Dash = AddAction("Dash", config.Dash, .1f);
 		Climb = AddAction("Climb", config.Climb);
 		Pause = AddAction("Pause", config.Pause);
 		Confirm = AddAction("Confirm", config.Confirm);
