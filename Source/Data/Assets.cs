@@ -236,24 +236,20 @@ public static partial class Assets
 		var fMeta = GetReflection(path + ".fragment.json");
 		var ext = gfx.Driver.GetShaderExtension();
 		var vertexShader = new Shader(gfx,
-			new(
-				Stage: ShaderStage.Vertex,
-				Code: File.ReadAllBytes(path + ".vertex." + ext),
-				SamplerCount: vMeta.samplers,
-				UniformBufferCount: vMeta.uniform_buffers,
-				EntryPoint: "vertex_main"
-			),
-			$"{name}.Vertex"
+			stage: ShaderStage.Vertex,
+			code: File.ReadAllBytes(path + ".vertex." + ext),
+			samplerCount: vMeta.samplers,
+			uniformBufferCount: vMeta.uniform_buffers,
+			entryPoint: "vertex_main",
+			name: $"{name}.Vertex"
 		);
 		var fragmentShader = new Shader(gfx,
-			new(
-				Stage: ShaderStage.Fragment,
-				Code: File.ReadAllBytes(path + ".fragment." + ext),
-				SamplerCount: fMeta.samplers,
-				UniformBufferCount: fMeta.uniform_buffers,
-				EntryPoint: "fragment_main"
-			),
-			$"{name}.Vertex"
+			stage: ShaderStage.Fragment,
+			code: File.ReadAllBytes(path + ".fragment." + ext),
+			samplerCount: fMeta.samplers,
+			uniformBufferCount: fMeta.uniform_buffers,
+			entryPoint: "fragment_main",
+			name: $"{name}.Vertex"
 		);
 
 		return new Material(vertexShader, fragmentShader);
