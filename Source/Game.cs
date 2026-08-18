@@ -47,11 +47,30 @@ public class Game : Module
 	/// </summary>
 	public const float RelativeScale = Height / 360.0f;
 
+	/// <summary>
+	/// Multiplier for the internal render resolution.
+	/// Set via the CELESTE64_RES_SCALE environment variable (0.1 - 1.0).
+	/// Lowering this can significantly help low-end GPUs.
+	/// </summary>
+	public static readonly float ResolutionScale = GetResolutionScale();
+
+	private static float GetResolutionScale()
+	{
+		var value = Environment.GetEnvironmentVariable("CELESTE64_RES_SCALE");
+		if (float.TryParse(value, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out var scale) &&
+			scale > 0.1f && scale <= 1.0f)
+			return scale;
+		return 1.0f;
+	}
+
 	private static Game? instance;
 	public static Game Instance => instance ?? throw new Exception("Game isn't running");
 
 	private readonly Stack<Scene> scenes = new();
-	private readonly Target target = new(Width, Height, [TextureFormat.Color, TextureFormat.Depth24Stencil8]);
+	private readonly Target target = new(
+		(int)MathF.Round(Width * ResolutionScale),
+		(int)MathF.Round(Height * ResolutionScale),
+		[TextureFormat.Color, TextureFormat.Depth24Stencil8]);
 	private readonly Batcher batcher = new();
 	private Transition transition;
 	private TransitionStep transitionStep = TransitionStep.None;

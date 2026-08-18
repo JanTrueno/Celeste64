@@ -1,0 +1,45 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Library</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Title>Foster</Title>
+    <Product>Foster</Product>
+    <Version>0.1.18-alpha</Version>
+    <Authors>Noel Berry</Authors>
+    <Description>A small 2D cross-platform Game Framework</Description>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/FosterFramework/Foster</RepositoryUrl>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <NativeLibsDir>$(ProjectDir)..\Platform\libs\</NativeLibsDir>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="$(NativeLibsDir)x64\FosterPlatform.dll">
+      <CopyToOutputDirectory Condition="$([MSBuild]::IsOSPlatform('Windows'))">PreserveNewest</CopyToOutputDirectory>
+      <Link>FosterPlatform.dll</Link>
+    </Content>
+    <Content Include="$(NativeLibsDir)lib64\libFosterPlatform.so">
+      <CopyToOutputDirectory Condition="$([MSBuild]::IsOSPlatform('Linux')) AND '$([System.Runtime.InteropServices.RuntimeInformation]::OSArchitecture)' == 'X64'">PreserveNewest</CopyToOutputDirectory>
+      <Link>libFosterPlatform.so</Link>
+    </Content>
+    <Content Include="$(NativeLibsDir)libarm64\libFosterPlatform.so">
+      <CopyToOutputDirectory Condition="$([MSBuild]::IsOSPlatform('Linux')) AND '$([System.Runtime.InteropServices.RuntimeInformation]::OSArchitecture)' == 'Arm64'">PreserveNewest</CopyToOutputDirectory>
+      <Link>libFosterPlatform.so</Link>
+    </Content>
+    <Content Include="$(NativeLibsDir)libarm\libFosterPlatform.so">
+      <CopyToOutputDirectory Condition="$([MSBuild]::IsOSPlatform('Linux')) AND '$([System.Runtime.InteropServices.RuntimeInformation]::OSArchitecture)' == 'Arm'">PreserveNewest</CopyToOutputDirectory>
+      <Link>libFosterPlatform.so</Link>
+    </Content>
+    <Content Include="$(NativeLibsDir)osx\libFosterPlatform.dylib">
+      <CopyToOutputDirectory Condition="$([MSBuild]::IsOSPlatform('OSX'))">PreserveNewest</CopyToOutputDirectory>
+      <Link>libFosterPlatform.dylib</Link>
+    </Content>
+  </ItemGroup>
+
+</Project>

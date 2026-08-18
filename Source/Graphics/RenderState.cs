@@ -29,4 +29,28 @@ public struct RenderState
 		mat.VerticalFogColor = VerticalFogColor;
 		mat.Cutout = CutoutMode;
 	}
+
+	/// <summary>
+	/// Applies shared values to a material used for instanced drawing.
+	/// The instance matrix is provided per-instance, so the Model matrix is identity
+	/// and the MVP only contains the Camera's view projection.
+	/// </summary>
+	public void ApplyToInstancedMaterial(DefaultMaterial mat, DefaultMaterial source)
+	{
+		if (mat.Shader == null)
+			return;
+
+		mat.Texture = source.Texture;
+		mat.Color = source.Color;
+		mat.Model = Matrix.Identity;
+		mat.MVP = Camera.ViewProjection;
+		mat.NearPlane = Camera.NearPlane;
+		mat.FarPlane = Camera.FarPlane;
+		mat.Silhouette = Silhouette;
+		mat.SilhouetteColor = source.SilhouetteColor;
+		mat.Time = (float)Time.Duration.TotalSeconds;
+		mat.SunDirection = SunDirection;
+		mat.VerticalFogColor = VerticalFogColor;
+		mat.Cutout = CutoutMode;
+	}
 }

@@ -219,6 +219,63 @@ public class SkinnedModel : Model
         Instance.Armature.SetAnimationFrame(input);
     }
 
+    /// <summary>
+    /// Adds static parts of this model to the ModelBatcher for instanced rendering,
+    /// and renders skinned parts per-draw.
+    /// </summary>
+    public void RenderBatched(ref RenderState state, ModelBatcher batcher)
+	{
+		for (int i = 0; i < Instance.Count; i ++)
+		{
+			var drawable = Instance[i];
+			var meshPart = Template.Parts[drawable.Template.LogicalMeshIndex];
+
+			if (drawable.Transform is RigidTransform statXform)
+			{
+				foreach (var primitive in meshPart)
+				{
+					batcher.Add(
+						statXform.WorldMatrix * BaseTranslation * state.ModelMatrix,
+						Template.Mesh,
+						primitive.Index,
+						primitive.Count,
+						Materials[primitive.Material]);
+				}
+			}
+
+			if (drawable.Transform is SkinnedTransform skinXform)
+			{
+				foreach (var primitive in meshPart)
+				{
+					var mat = Materials[primitive.Material];
+
+					state.ApplyToMaterial(mat, BaseTranslation);
+					
+					if (mat.Shader != null && 
+						mat.Shader.Has("u_jointMat"))
+					{
+						for (int j = 0, n = Math.Min(SkinMatrixCount, skinXform.SkinMatrices.Count); j < n; j ++)
+							transformSkin[j] = skinXform.SkinMatrices[j];
+						mat.Set("u_jointMult", 1.0f);
+						mat.Set("u_jointMat", transformSkin.AsSpan());
+					}
+
+                    DrawCommand cmd = new(state.Camera.Target, Template.Mesh, mat)
+                    {
+                        MeshIndexStart = primitive.Index,
+                        MeshIndexCount = primitive.Count,
+						DepthMask = state.DepthMask,
+                        DepthCompare = state.DepthCompare,
+                        CullMode = CullMode.Back
+                    };
+                    cmd.Submit();
+					state.Calls++;
+					state.Triangles += primitive.Count / 3;
+				}
+			}
+		}
+	}
+
     public override void Render(ref RenderState state)
 	{
 		for (int i = 0; i < Instance.Count; i ++)

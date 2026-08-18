@@ -245,6 +245,12 @@ public static class Assets
 					target?.AppendLine(line);
 			}
 
+			if (Graphics.Renderer == Renderers.OpenGLES)
+			{
+				vertex.Replace("#version 330", "#version 300 es");
+				fragment.Replace("#version 330", "#version 300 es");
+			}
+
 			data = new(
 				vertexShader: vertex.ToString(),
 				fragmentShader: fragment.ToString()

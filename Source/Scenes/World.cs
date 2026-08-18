@@ -32,6 +32,15 @@ public class World : Scene
 	private readonly Batcher batch = new();
 	private readonly List<Skybox> skyboxes = [];
 	private readonly SpriteRenderer spriteRenderer = new();
+	private readonly ModelBatcher modelBatcher = new();
+	private readonly Comparison<ModelEntry> modelComparer = null!;
+
+	public World()
+	{
+		modelComparer = (a, b) =>
+			(int)((b.Actor.Position - Camera.Position).LengthSquared() -
+			 (a.Actor.Position - Camera.Position).LengthSquared());
+	}
 
 	// Pause Menu, only drawn when actually paused
 	private readonly Menu pauseMenu = new();
@@ -672,9 +681,7 @@ public class World : Scene
 			}
 
 			// sort models by distance (for transparency)
-			models.Sort((a, b) =>
-				(int)((b.Actor.Position - Camera.Position).LengthSquared() -
-				 (a.Actor.Position - Camera.Position).LengthSquared()));
+			models.Sort(modelComparer);
 
 			// perp all models
 			foreach (var it in models)
@@ -865,13 +872,26 @@ public class World : Scene
 
 	private void RenderModels(ref RenderState state, List<ModelEntry> models, ModelFlags flags)
 	{
+		// transparency requires per-instance depth sorting, so keep it per-draw
+		var canBatch = flags != ModelFlags.Transparent && flags != ModelFlags.StrawberryGetEffect;
+
+		if (canBatch)
+			modelBatcher.Clear();
+
 		foreach (var it in models)
 		{
 			if (!it.Model.Flags.Has(flags))
 				continue;
 
 			state.ModelMatrix = it.Model.Transform * it.Actor.Matrix;
-			it.Model.Render(ref state);
+
+			if (canBatch && it.Model is SkinnedModel skinned)
+				skinned.RenderBatched(ref state, modelBatcher);
+			else
+				it.Model.Render(ref state);
 		}
+
+		if (canBatch)
+			modelBatcher.Flush(ref state);
 	}
 }

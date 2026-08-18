@@ -1,0 +1,10 @@
+.git
+.gitignore
+.gitattributes
+bin
+obj
+**/bin
+**/obj
+artifacts
+*.pdb
+.vs

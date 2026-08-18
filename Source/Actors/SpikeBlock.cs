@@ -3,7 +3,7 @@ namespace Celeste64;
 
 public class SpikeBlock : Attacher, IHaveModels
 {
-	public SimpleModel? Model;
+	public readonly List<SkinnedModel> Models = [];
 	public Vec3 Direction;
 
 	public override Vec3 AttachNormal => -Direction;
@@ -59,12 +59,11 @@ public class SpikeBlock : Attacher, IHaveModels
 		var height = (vertical * size).Length();
 		var columns = Math.Max(1, MathF.Round(width / step));
 		var rows = Math.Max(1, MathF.Round(height / step));
-		var models = new List<SkinnedModel>();
 
 		for (int x = 0; x < columns; x++)
 			for (int y = 0; y < rows; y++)
 			{
-				models.Add(new SkinnedModel(Assets.Models["spike"])
+				Models.Add(new SkinnedModel(Assets.Models["spike"])
 				{
 					Flags = ModelFlags.Terrain,
 					Transform =
@@ -77,7 +76,6 @@ public class SpikeBlock : Attacher, IHaveModels
 				});
 			}
 			
-		Model = new SimpleModel(models);
 		Direction = forward;
 
 		base.Added();
@@ -85,7 +83,7 @@ public class SpikeBlock : Attacher, IHaveModels
 
 	public void CollectModels(List<(Actor Actor, Model Model)> populate)
 	{
-		if (Model != null)
-			populate.Add((this, Model));
+		foreach (var model in Models)
+			populate.Add((this, model));
 	}
 }

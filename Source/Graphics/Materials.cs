@@ -24,7 +24,18 @@ public class DefaultMaterial : Material
 
     public DefaultMaterial(Texture? texture = null)
 		: base(Assets.Shaders["Default"])
-	{
+    {
+        Init(texture);
+    }
+
+    public DefaultMaterial(Shader shader, Texture? texture = null)
+		: base(shader)
+    {
+        Init(texture);
+    }
+
+    private void Init(Texture? texture)
+    {
         if (!(Shader?.Has(MatrixUniformName) ?? false))
         {
             Log.Warning($"Shader '{Shader?.Name}' is missing '{MatrixUniformName}' uniform");
